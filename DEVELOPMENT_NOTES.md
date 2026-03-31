@@ -2,6 +2,16 @@
 
 ## Latest Updates (March 31, 2026)
 
+### 🔐 Privacy Enhancement: On-Demand Script Injection
+- **Major Change**: Switched from persistent content scripts to on-demand injection
+- **How**: Content script now only injected when user clicks the extension icon
+- **Why**: Privacy-first approach - no background access to websites
+- **Modified Files**:
+  - `manifest.json`: Removed `content_scripts` section, added `scripting` permission
+  - `popup.js`: Added dynamic script injection with `chrome.scripting.executeScript()`
+  - Documentation updated to highlight privacy improvements
+- **Result**: Extension is now 100% safe with minimal permissions
+
 ### ✨ Intelligent Title Extraction
 - **Editable Event Titles**: Each detected date now shows an editable title field in the popup
 - **Smart Title Detection**: Automatically extracts event titles from surrounding context (headings, event keywords)

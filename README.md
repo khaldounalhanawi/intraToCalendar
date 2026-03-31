@@ -62,11 +62,15 @@ Extract dates from web pages and save them to Google Calendar or download as .ic
 
 ## Privacy & Security
 
-- ✅ Your data is only used to create calendar events
-- ✅ No information is shared with third parties
-- ✅ OAuth2 tokens are managed securely by Chrome
-- ✅ All API calls use HTTPS
-- ✅ Minimal permissions requested
+**Privacy-First Design:**
+- ✅ **On-Demand Only**: Extension only scans pages when you click the icon
+- ✅ **No Background Activity**: No persistent access to your browsing
+- ✅ **Minimal Permissions**: Only accesses current tab when activated
+- ✅ **Local Processing**: All date extraction happens in your browser
+- ✅ **No Data Collection**: We don't collect, store, or transmit your data
+- ✅ **Secure OAuth**: Tokens managed by Chrome's Identity API
+- ✅ **No Third Parties**: Direct API calls to Google Calendar only
+- ✅ **HTTPS Only**: All communications encrypted
 
 ## Supported Date Formats
 

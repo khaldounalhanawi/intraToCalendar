@@ -9,6 +9,7 @@ IntraToCalendar is a Chrome extension that automatically extracts date and time 
 The extension follows a modular architecture with clear separation:
 
 1. **content.js** - Content script that runs on web pages
+   - **On-demand injection**: Only loaded when user clicks extension icon (privacy-first)
    - Scans DOM for date patterns
    - Handles dynamic content with MutationObserver
    - Communicates extracted dates to popup
@@ -18,7 +19,8 @@ The extension follows a modular architecture with clear separation:
    - Regex patterns for common date formats
    - Validation and filtering logic
 
-3. **popup.js** - Popup UI controller
+3. **Injects content script dynamically when popup opens
+   - popup.js** - Popup UI controller
    - User interaction handling
    - Date selection management
    - State management for different views

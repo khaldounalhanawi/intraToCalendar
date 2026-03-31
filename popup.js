@@ -68,6 +68,26 @@ class PopupController {
         throw new Error('No active tab found');
       }
 
+      // Check if page is restricted (chrome://, edge://, etc.)
+      if (tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://') || 
+          tab.url.startsWith('edge://') || tab.url.startsWith('about:')) {
+        throw new Error('Cannot access this page (browser restriction)');
+      }
+
+      // Inject content script on-demand (privacy-first approach)
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['date-utils.js', 'content.js']
+        });
+        
+        // Small delay to ensure scripts are fully loaded
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (injectError) {
+        console.error('Injection error:', injectError);
+        throw new Error('Cannot access this page. Try a regular website.');
+      }
+
       // Send message to content script
       const response = await chrome.tabs.sendMessage(tab.id, { action: 'scanDates' });
       
