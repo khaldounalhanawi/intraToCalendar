@@ -1,20 +1,35 @@
 # IntraToCalendar - Development Notes
 
+## Latest Updates (March 31, 2026)
+
+### ✨ Intelligent Title Extraction
+- **Editable Event Titles**: Each detected date now shows an editable title field in the popup
+- **Smart Title Detection**: Automatically extracts event titles from surrounding context (headings, event keywords)
+- **User Control**: Users can edit any title before saving; if unchanged, uses auto-detected title
+- **Fallback Logic**: If no title can be detected, defaults to "Event"
+
+### 🌙 Dark Mode Support
+- Automatic theme detection via `prefers-color-scheme`
+- Matches Chrome browser's light/dark theme
+- Smooth theme transitions
+
 ## What Was Built
 
 ### Core Extension Files
 1. **manifest.json** - Chrome extension manifest with OAuth2 configuration
-2. **content.js** - Page scanning with MutationObserver for dynamic content
+2. **content.js** - Page scanning with MutationObserver + intelligent title extraction
 3. **date-utils.js** - Date parsing with 6+ format patterns
-4. **popup.html** - User interface with multiple states
-5. **popup.js** - UI controller with state management
-6. **styles.css** - Centralized styling with CSS variables
+4. **popup.html** - User interface with editable title inputs
+5. **popup.js** - UI controller with title editing support
+6. **styles.css** - Centralized styling with dark mode support
 7. **calendar-utils.js** - Google Calendar API integration
 8. **ics-utils.js** - RFC 5545 compliant .ics file generation
 9. **background.js** - Service worker for OAuth2 and API requests
 
 ### Key Features
-- Smart date extraction with priority ranking
+- **Smart date extraction** with priority ranking
+- **Intelligent title extraction** from page context
+- **Editable titles** in popup interface
 - Multiple date format support
 - Filters out prices, IDs, and irrelevant numbers
 - User selection interface with checkboxes
@@ -23,6 +38,7 @@
 - MutationObserver for dynamic content (React, Vue, etc.)
 - Handles edge cases (no dates, duplicates, too many results)
 - Secure authentication with Chrome Identity API
+- **Light/Dark mode** support
 
 ### Architecture Principles
 - **Separation of Concerns** - Each module has single responsibility

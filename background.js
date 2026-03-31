@@ -176,7 +176,7 @@ class BackgroundService {
     const endDate = new Date(eventDate.getTime() + 60 * 60 * 1000);
 
     const event = {
-      summary: this.generateEventTitle(dateObj),
+      summary: dateObj.title || this.generateEventTitle(dateObj),
       description: `Source: ${dateObj.context || dateObj.originalText}\n\nExtracted by IntraToCalendar extension`,
       start: {
         dateTime: eventDate.toISOString(),

@@ -144,9 +144,25 @@ class PopupController {
     const info = document.createElement('div');
     info.className = 'date-info';
 
-    const text = document.createElement('div');
-    text.className = 'date-text';
-    text.textContent = dateObj.formattedDate;
+    // Editable title input
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.className = 'date-title-input';
+    titleInput.placeholder = 'Event title...';
+    titleInput.value = dateObj.title || 'Event';
+    titleInput.addEventListener('input', (e) => {
+      // Update the date object with the edited title
+      const dateInList = this.allDates.find(d => d.id === dateObj.id);
+      if (dateInList) {
+        dateInList.editedTitle = e.target.value.trim();
+      }
+    });
+    // Prevent click propagation to avoid toggling checkbox
+    titleInput.addEventListener('click', (e) => e.stopPropagation());
+
+    const dateTime = document.createElement('div');
+    dateTime.className = 'date-time';
+    dateTime.textContent = dateObj.formattedDate;
 
     const context = document.createElement('div');
     context.className = 'date-context';
@@ -156,16 +172,17 @@ class PopupController {
     badge.className = `date-badge ${dateObj.isFuture ? 'future' : ''}`;
     badge.textContent = dateObj.isFuture ? 'Upcoming' : 'Past';
 
-    info.appendChild(text);
+    info.appendChild(titleInput);
+    info.appendChild(dateTime);
     info.appendChild(context);
     info.appendChild(badge);
 
     item.appendChild(checkbox);
     item.appendChild(info);
 
-    // Click anywhere on item to toggle
+    // Click anywhere on item to toggle (except on input)
     item.addEventListener('click', (e) => {
-      if (e.target !== checkbox) {
+      if (e.target !== checkbox && e.target !== titleInput) {
         checkbox.click();
       }
     });
@@ -196,7 +213,13 @@ class PopupController {
 
     try {
       this.updateStatus('Saving to Google Calendar...', 'info');
-      const selectedDateObjects = this.allDates.filter(d => this.selectedDates.has(d.id));
+      const selectedDateObjects = this.allDates
+        .filter(d => this.selectedDates.has(d.id))
+        .map(d => ({
+          ...d,
+          // Use edited title if provided, otherwise use auto-detected title
+          title: d.editedTitle || d.title || 'Event'
+        }));
 
       const result = await chrome.runtime.sendMessage({
         action: 'saveToCalendar',
@@ -230,7 +253,13 @@ class PopupController {
 
     try {
       this.updateStatus('Creating .ics file...', 'info');
-      const selectedDateObjects = this.allDates.filter(d => this.selectedDates.has(d.id));
+      const selectedDateObjects = this.allDates
+        .filter(d => this.selectedDates.has(d.id))
+        .map(d => ({
+          ...d,
+          // Use edited title if provided, otherwise use auto-detected title
+          title: d.editedTitle || d.title || 'Event'
+        }));
 
       const icsContent = ICSUtils.createICSFile(selectedDateObjects);
       const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });

@@ -37,7 +37,7 @@ END:VCALENDAR`;
     const dtstart = this.formatICSDate(eventDate);
     const dtend = this.formatICSDate(endDate);
     
-    const summary = this.escapeICSText(this.generateEventTitle(dateObj));
+    const summary = this.escapeICSText(dateObj.title || this.generateEventTitle(dateObj));
     const description = this.escapeICSText(dateObj.context || dateObj.originalText);
 
     return `BEGIN:VEVENT

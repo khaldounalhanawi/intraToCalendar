@@ -180,6 +180,125 @@ class DateExtractor {
   }
 
   /**
+   * Extract event title by searching DOM for nearby headings
+   * @param {Element} element - The date element
+   * @param {string} context - Context text as fallback
+   * @param {string} dateText - The date text to remove
+   * @returns {string} Extracted title
+   */
+  extractTitle(element, context, dateText) {
+    if (!element) return this.extractTitleFromContext(context, dateText);
+
+    let title = '';
+
+    // Strategy 1: Look for headings in the same container
+    const container = element.closest('div, section, article, li, td, header, main');
+    if (container) {
+      // Find any heading element (h1-h6) in the container
+      const heading = container.querySelector('h1, h2, h3, h4, h5, h6');
+      if (heading) {
+        title = heading.textContent.trim();
+        if (title && title.length > 2 && title.length < 150) {
+          return title;
+        }
+      }
+
+      // Check siblings before the date element
+      let sibling = element.previousElementSibling;
+      let checks = 0;
+      while (sibling && checks < 3) {
+        if (/^H[1-6]$/.test(sibling.tagName)) {
+          title = sibling.textContent.trim();
+          if (title && title.length > 2 && title.length < 150) {
+            return title;
+          }
+        }
+        sibling = sibling.previousElementSibling;
+        checks++;
+      }
+    }
+
+    // Strategy 2: Look upward in DOM tree for nearby headings
+    let parent = element.parentElement;
+    let depth = 0;
+    while (parent && depth < 5) {
+      // Check for heading siblings
+      const headings = Array.from(parent.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+      for (const heading of headings) {
+        const headingText = heading.textContent.trim();
+        // Make sure the heading doesn't contain the date itself
+        if (headingText && 
+            headingText.length > 2 && 
+            headingText.length < 150 &&
+            !headingText.includes(dateText)) {
+          return headingText;
+        }
+      }
+      parent = parent.parentElement;
+      depth++;
+    }
+
+    // Strategy 3: Check if element has aria-label or title
+    if (element.hasAttribute('aria-label')) {
+      title = element.getAttribute('aria-label').trim();
+      if (title && title.length > 2 && !title.includes(dateText)) {
+        return title;
+      }
+    }
+
+    // Fallback to context-based extraction
+    return this.extractTitleFromContext(context, dateText);
+  }
+
+  /**
+   * Extract title from context string (fallback method)
+   * @param {string} context - Context text
+   * @param {string} dateText - The date text to remove
+   * @returns {string} Extracted title
+   */
+  extractTitleFromContext(context, dateText) {
+    if (!context) return 'Event';
+
+    // Remove the date text itself
+    let cleaned = context.replace(dateText, '').trim();
+
+    // Split by separator and clean up
+    const parts = cleaned.split('|').map(p => p.trim()).filter(p => p.length > 0);
+
+    // Look for event-like patterns
+    const eventKeywords = [
+      'meeting', 'event', 'class', 'lecture', 'appointment', 'deadline',
+      'due', 'exam', 'presentation', 'interview', 'conference', 'workshop',
+      'seminar', 'webinar', 'session', 'training', 'call', 'demo', 'review',
+      'club', 'practice', 'rehearsal', 'match', 'game', 'competition'
+    ];
+
+    for (const part of parts) {
+      const lowerPart = part.toLowerCase();
+      
+      // Check if part contains event keywords
+      const hasEventKeyword = eventKeywords.some(keyword => lowerPart.includes(keyword));
+      
+      if (hasEventKeyword && part.length > 3 && part.length < 150) {
+        return part;
+      }
+    }
+
+    // If no event keyword, use first meaningful part
+    for (const part of parts) {
+      // Check if it looks like a title (not just numbers or symbols)
+      if (part.length > 3 && 
+          part.length < 150 && 
+          !part.match(/^[0-9\$£€¥#]+/) &&
+          part.match(/[a-zA-Z]/)) {
+        return part;
+      }
+    }
+
+    return 'Event';
+  }
+
+  /**
    * Process and filter candidates
    * @param {Array} candidates - Raw candidates
    */
@@ -235,7 +354,8 @@ class DateExtractor {
       formattedDate: pd.formattedDate,
       context: pd.context,
       source: pd.source,
-      isFuture: pd.isFuture
+      isFuture: pd.isFuture,
+      title: this.extractTitle(pd.element, pd.context, pd.originalText)
     }));
   }
 
