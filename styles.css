@@ -1,8 +1,10 @@
 /**
  * Centralized Styles for IntraToCalendar Extension
+ * Supports automatic light/dark mode based on browser theme
  */
 
 :root {
+  /* Light Mode Colors (Default) */
   --primary-color: #4285f4;
   --primary-hover: #357ae8;
   --secondary-color: #5f6368;
@@ -15,6 +17,42 @@
   --hover-bg: #f8f9fa;
   --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   --shadow-hover: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  --header-gradient-start: #4285f4;
+  --header-gradient-end: #667eea;
+  --selected-bg: #e8f0fe;
+  --selected-border: #4285f4;
+  --badge-bg: #f8f9fa;
+  --badge-text: #5f6368;
+  --badge-future-bg: #e6f4ea;
+  --badge-future-text: #34a853;
+  --footer-bg: #f8f9fa;
+}
+
+/* Dark Mode Colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #8ab4f8;
+    --primary-hover: #aecbfa;
+    --secondary-color: #9aa0a6;
+    --success-color: #81c995;
+    --error-color: #f28b82;
+    --border-color: #3c4043;
+    --bg-color: #202124;
+    --text-color: #e8eaed;
+    --text-secondary: #9aa0a6;
+    --hover-bg: #292a2d;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.4);
+    --shadow-hover: 0 3px 6px rgba(0,0,0,0.4), 0 3px 6px rgba(0,0,0,0.5);
+    --header-gradient-start: #1a73e8;
+    --header-gradient-end: #5a5fc7;
+    --selected-bg: #1a3a52;
+    --selected-border: #8ab4f8;
+    --badge-bg: #292a2d;
+    --badge-text: #9aa0a6;
+    --badge-future-bg: #1e3a2a;
+    --badge-future-text: #81c995;
+    --footer-bg: #292a2d;
+  }
 }
 
 * {
@@ -146,8 +184,8 @@ main {
 }
 
 .date-item.selected {
-  background: #e8f0fe;
-  border-left: 3px solid var(--primary-color);
+  background: var(--selected-bg);
+  border-left: 3px solid var(--selected-border);
 }
 
 .date-checkbox {
@@ -186,13 +224,13 @@ main {
   padding: 2px 6px;
   border-radius: 4px;
   margin-top: 4px;
-  background: var(--hover-bg);
-  color: var(--text-secondary);
+  background: var(--badge-bg);
+  color: var(--badge-text);
 }
 
 .date-badge.future {
-  background: #e6f4ea;
-  color: var(--success-color);
+  background: var(--badge-future-bg);
+  color: var(--badge-future-text);
 }
 
 /* Buttons */
@@ -227,7 +265,7 @@ main {
 }
 
 .btn-secondary {
-  background: white;
+  background: var(--bg-color);
   color: var(--text-color);
   border: 1px solid var(--border-color);
 }
@@ -271,7 +309,7 @@ main {
 footer {
   padding: 12px 16px;
   border-top: 1px solid var(--border-color);
-  background: var(--hover-bg);
+  background: var(--footer-bg);
 }
 
 .status {
