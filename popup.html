@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IntraToCalendar</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📅 IntraToCalendar</h1>
+      <p class="subtitle">Extract dates and save to calendar</p>
+    </header>
+
+    <main>
+      <!-- Loading State -->
+      <div id="loading" class="state-container">
+        <div class="spinner"></div>
+        <p>Scanning page for dates...</p>
+      </div>
+
+      <!-- No Dates Found -->
+      <div id="no-dates" class="state-container hidden">
+        <div class="empty-state">
+          <span class="icon">🔍</span>
+          <p>No dates found on this page</p>
+          <button id="rescan-btn" class="btn btn-secondary">Scan Again</button>
+        </div>
+      </div>
+
+      <!-- Dates Found -->
+      <div id="dates-container" class="hidden">
+        <div class="info-box">
+          <span id="date-count">0</span> date(s) found
+        </div>
+
+        <div id="dates-list" class="dates-list">
+          <!-- Dates will be dynamically inserted here -->
+        </div>
+
+        <div class="actions">
+          <button id="save-to-calendar-btn" class="btn btn-primary" disabled>
+            <span class="btn-icon">📆</span>
+            Save to Google Calendar
+          </button>
+          <button id="download-ics-btn" class="btn btn-secondary" disabled>
+            <span class="btn-icon">⬇️</span>
+            Download as .ics
+          </button>
+        </div>
+
+        <div class="secondary-actions">
+          <button id="rescan-btn-2" class="btn-link">🔄 Rescan page</button>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div id="error-container" class="state-container hidden">
+        <div class="error-box">
+          <span class="icon">⚠️</span>
+          <p id="error-message">An error occurred</p>
+          <button id="retry-btn" class="btn btn-secondary">Try Again</button>
+        </div>
+      </div>
+
+      <!-- Auth State -->
+      <div id="auth-container" class="state-container hidden">
+        <div class="auth-box">
+          <span class="icon">🔐</span>
+          <p>To save to Google Calendar, please authorize access</p>
+          <button id="auth-btn" class="btn btn-primary">Authorize Google Calendar</button>
+          <p class="privacy-note">Your data is only used to create calendar events and is never shared with third parties.</p>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="status" id="status"></div>
+    </footer>
+  </div>
+
+  <script src="date-utils.js"></script>
+  <script src="calendar-utils.js"></script>
+  <script src="ics-utils.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

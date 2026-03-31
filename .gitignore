@@ -1,0 +1,50 @@
+# Editor config
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.log
+*.cache
+
+# Build outputs (if any)
+dist/
+build/
+
+# Dependencies (if added later)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment files
+.env
+.env.local
+
+# Private keys and credentials
+*.pem
+*.key
+credentials.json
+client_secret*.json
+
+# Zip files (for distribution)
+*.zip
+*.crx
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+
+# Backup files
+*.bak
+*.backup

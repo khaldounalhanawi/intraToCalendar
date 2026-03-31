@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IntraToCalendar Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 { color: #333; }
+    .event {
+      background: #f5f5f5;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      border-left: 4px solid #4285f4;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .text-white {
+      color: white;
+      background: #4285f4;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .text-xs {
+      font-size: 14px;
+    }
+    #dynamic-content {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff3cd;
+      border-radius: 8px;
+    }
+    button {
+      background: #4285f4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+    button:hover {
+      background: #357ae8;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 IntraToCalendar Test Page</h1>
+  <p>This page contains various date formats to test the extension's extraction capabilities.</p>
+
+  <div class="event">
+    <h2>Conference Registration</h2>
+    <p class="text-center text-white text-xs">Thursday, April 16, 2026 at 04:00 PM</p>
+    <p>Join us for our annual developer conference. Early bird registration closes soon!</p>
+  </div>
+
+  <div class="event">
+    <h2>Team Meeting</h2>
+    <p>Scheduled for <strong>Apr 20, 2026, 9 AM</strong> in the main conference room.</p>
+  </div>
+
+  <div class="event">
+    <h2>Project Deadline</h2>
+    <p>All submissions must be received by May 1, 2026 at 5:00 PM.</p>
+  </div>
+
+  <div class="event">
+    <h2>Workshop Series</h2>
+    <p>Next workshop: <time datetime="2026-05-15T14:00">15 May 2026 14:00</time></p>
+    <p>Advanced topics will be covered on 05/22/2026 2:00 PM</p>
+  </div>
+
+  <div class="event">
+    <h2>Webinar Schedule</h2>
+    <ul>
+      <li>Introduction: Tuesday, June 1, 2026 at 10:00 AM</li>
+      <li>Advanced Session: 2026-06-08 10:00</li>
+      <li>Q&A: June 15, 2026, 10 AM</li>
+    </ul>
+  </div>
+
+  <div class="event">
+    <h2>Non-Date Content (Should be Ignored)</h2>
+    <p>Product ID: 12345</p>
+    <p>Price: $99.99 USD</p>
+    <p>Order #: 2026-04-001</p>
+    <p>Tracking: 1234567890</p>
+  </div>
+
+  <button onclick="addDynamicContent()">Load Dynamic Content (Test MutationObserver)</button>
+
+  <div id="dynamic-content"></div>
+
+  <script>
+    function addDynamicContent() {
+      const content = document.getElementById('dynamic-content');
+      content.innerHTML = `
+        <h2>🔄 Dynamically Loaded Events</h2>
+        <div class="event">
+          <h3>Late Addition Event</h3>
+          <p>This event was added dynamically: <strong>July 4, 2026 at 6:00 PM</strong></p>
+          <p>The extension should automatically detect this without rescanning!</p>
+        </div>
+        <div class="event">
+          <h3>Another Dynamic Event</h3>
+          <p>Workshop on 2026-07-10 15:30 - Testing ISO format with dynamic loading</p>
+        </div>
+      `;
+    }
+
+    // Simulate a real-world SPA behavior
+    setTimeout(() => {
+      console.log('Simulating SPA navigation...');
+      const lateContent = document.createElement('div');
+      lateContent.className = 'event';
+      lateContent.innerHTML = `
+        <h3>Auto-loaded Event</h3>
+        <p>This appeared automatically after 3 seconds: August 1, 2026 at 11:00 AM</p>
+      `;
+      document.body.appendChild(lateContent);
+    }, 3000);
+  </script>
+
+  <hr style="margin: 40px 0;">
+
+  <h2>📋 Testing Instructions</h2>
+  <ol>
+    <li><strong>Load this page</strong> in Chrome</li>
+    <li><strong>Click the IntraToCalendar extension icon</strong></li>
+    <li><strong>Verify</strong> the extension finds multiple dates</li>
+    <li><strong>Check</strong> that prices and IDs are NOT detected as dates</li>
+    <li><strong>Select</strong> one or more dates using checkboxes</li>
+    <li><strong>Test .ics download</strong> (works immediately)</li>
+    <li><strong>Click "Load Dynamic Content"</strong> button above</li>
+    <li><strong>Wait</strong> and verify the extension auto-updates</li>
+    <li><strong>Test Google Calendar save</strong> (requires OAuth setup)</li>
+  </ol>
+
+  <h2>✅ Expected Results</h2>
+  <ul>
+    <li>Should find ~10-12 valid dates</li>
+    <li>Should ignore: Product ID, Price, Order #, Tracking</li>
+    <li>Should auto-detect dynamically loaded events</li>
+    <li>Should show context for each date</li>
+    <li>Should mark future dates as "Upcoming"</li>
+  </ul>
+
+  <h2>🔗 Real Websites to Test</h2>
+  <ul>
+    <li><a href="https://www.eventbrite.com/">Eventbrite</a> - Event listings</li>
+    <li><a href="https://www.meetup.com/">Meetup</a> - Meetup schedules</li>
+    <li><a href="https://news.ycombinator.com/">Hacker News</a> - Article timestamps</li>
+    <li>Any university course schedule page</li>
+    <li>Conference websites</li>
+  </ul>
+</body>
+</html>
